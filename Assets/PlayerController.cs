@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -22,7 +22,19 @@ public class PlayerController : MonoBehaviour
         Debug.Log("I have hit" + other.gameObject.name);
         if(other.gameObject.CompareTag("coin")) {
             Destroy(other.gameObject);
-            coins +=1; 
+            coins +=1;
+        }
+        if (other.gameObject.CompareTag("floor")) {
+            other.gameObject.GetComponent<Renderer>().material.color = Random.ColorHSV();
+        }
+
+
+    }
+    void OnTriggerExit(Collider other)
+    {
+        if (other.gameObject.CompareTag("floor"))
+        {
+            other.gameObject.GetComponent<Renderer>().material.color = Color.black;
         }
     }
 }
