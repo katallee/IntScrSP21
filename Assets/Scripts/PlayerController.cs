@@ -6,6 +6,7 @@ public class PlayerController : MonoBehaviour
 {
     public int oxygenSupply = 0;
     bool crouch = false;
+    public int coins = 0;
 
     // Start is called before the first frame update
     void Start()
@@ -26,6 +27,28 @@ public class PlayerController : MonoBehaviour
         {
             Destroy(other.gameObject);
             oxygenSupply++;
+        }
+
+        Debug.Log("I have hit" + other.gameObject.name);
+        
+        if(other.gameObject.CompareTag("Coin")) {
+            Destroy(other.gameObject);
+            coins +=1;
+            // Destroy the coin
+            Destroy(other.gameObject);
+        }
+        
+        if (other.gameObject.CompareTag("Floor")) {
+            other.gameObject.GetComponent<Renderer>().material.color = Random.ColorHSV();
+        }
+    }
+    
+    void OnTriggerExit(Collider other)
+    {
+        if (other.gameObject.CompareTag("Floor"))
+        {
+            other.gameObject.GetComponent<Renderer>().material.color = Color.black;
+
         }
     }
 
