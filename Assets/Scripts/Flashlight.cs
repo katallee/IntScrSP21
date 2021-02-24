@@ -7,6 +7,7 @@ public class Flashlight : MonoBehaviour, IItem
 
     [SerializeField]
     Light flashlight;
+    bool canSwitchLight = true; //player can turn flashlight on or off
 
     public void Pickup(Transform hand) {
         Debug.Log("I am running the Pickup() method.");
@@ -19,8 +20,13 @@ public class Flashlight : MonoBehaviour, IItem
     }
 
     public void Use() {
-        Debug.Log("Using out Light");
-        flashlight.enabled = !flashlight.enabled;
+        Debug.Log("Using our Light");
+        if(canSwitchLight) {                                    //if canswitch is true
+            flashlight.enabled = !flashlight.enabled;           //switch the light
+            canSwitchLight = false;                             //disable canswitch
+            StartCoroutine(Wait());                             //wait for 1 second
+
+        }
     }
 
     public void Drop() {
@@ -30,5 +36,10 @@ public class Flashlight : MonoBehaviour, IItem
         this.transform.Translate(0, 0, 2);  //move the item forward 2 meters
         this.GetComponent<Rigidbody>().AddForce(Vector3.forward * 10, ForceMode.Impulse);   //throw item away with force
         this.GetComponent<Collider>().enabled = true;   //turn on item's collider
+    }
+
+    IEnumerator Wait() {
+        yield return new WaitForSeconds(1); //wait for 1 second
+        canSwitchLight = true;              //make canswitch true again
     }
 }

@@ -10,6 +10,8 @@ public class Gun : MonoBehaviour, IItem
     [SerializeField]
     Transform bulletSpawn;
 
+    bool canFire = true;
+
     void Start() {
         if(bulletSpawn == null) {
             bulletSpawn = this.transform.GetChild(0);
@@ -33,16 +35,22 @@ public class Gun : MonoBehaviour, IItem
         //bulletClone.velocity = transform.forward * bulletSpeed;
         //code for public bulletSpeed, bullet, and bulletClone components found in Unity's community forum
         //https://answers.unity.com/questions/581576/simple-bullet-script.html
-        GameObject ball = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-        ball.transform.localScale = Vector3.one * 0.2f;
-        ball.transform.position = bulletSpawn.position;
-        ball.transform.Translate(transform.forward);    //move the ball forward by 1 meter
+        if(canFire) {                                           //if canfire is true
+            GameObject ball = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+            ball.transform.localScale = Vector3.one * 0.2f;
+            ball.transform.position = bulletSpawn.position;
+            ball.transform.Translate(transform.forward);    //move the ball forward by 1 meter
 
-        TrailRenderer tr = ball.AddComponent<TrailRenderer>();
-        tr.time = 0.5f;
+            TrailRenderer tr = ball.AddComponent<TrailRenderer>();
+            tr.time = 0.5f;
 
-        Rigidbody rb = ball.AddComponent<Rigidbody>();
-        rb.AddForce(transform.forward * 50, ForceMode.Impulse);
+            Rigidbody rb = ball.AddComponent<Rigidbody>();
+            rb.AddForce(transform.forward * 50, ForceMode.Impulse);
+
+            canFire = false;                                    //disable canfire
+            StartCoroutine(Wait());                             //wait for 1 second
+        }
+        
     }
 
     public void Drop() {
@@ -52,6 +60,10 @@ public class Gun : MonoBehaviour, IItem
         this.transform.Translate(0, 0, 2);  //move the gun forward 2 meters
         this.GetComponent<Rigidbody>().AddForce(Vector3.forward * 10, ForceMode.Impulse);   //throw gun away with force
         this.GetComponent<Collider>().enabled = true;   //turn on gun's collider
+    }
+    IEnumerator Wait() {
+        yield return new WaitForSeconds(1);     //wait for 1 second
+        canFire = true;                         //make canfire true again
     }
 }
 
