@@ -2,10 +2,19 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Gun : MonoBehaviour
+public class Gun : MonoBehaviour, IItem
 {
-    public float bulletSpeed = 10f;     //couldn't get the code to work until I debugged and added f to 10
+    public float bulletSpeed = 10f;     
     public Rigidbody bullet;
+
+    [SerializeField]
+    Transform bulletSpawn;
+
+    void Start() {
+        if(bulletSpawn == null) {
+            bulletSpawn = this.transform.GetChild(0);
+        }
+    }
 
     //this function will be called from the PlayerController.
     public void Pickup(Transform hand) {
@@ -14,16 +23,26 @@ public class Gun : MonoBehaviour
         this.transform.localPosition = Vector3.zero;           //move gun to hand
         this.transform.localRotation = Quaternion.identity;    //make gun face forward same as hand
         this.GetComponent<Rigidbody>().isKinematic = true;     //make gun not fall
-        this.GetComponent<Collider>().enabled = false;                                  //turn off gun's collider
-        // other.GetComponent<RigidBody>().enabled = false;      //if you still getpushed around, add this
+        this.GetComponent<Collider>().enabled = false;         //turn off gun's collider
+        // other.GetComponent<RigidBody>().enabled = false;    //if you still getpushed around, add this
     }
 
     public void Use() {
         Debug.Log("<color=red>Pow!</color>");
-        Rigidbody bulletClone = (Rigidbody) Instantiate(bullet, transform.position, transform.rotation);
-        bulletClone.velocity = transform.forward * bulletSpeed;
+        //Rigidbody bulletClone = (Rigidbody) Instantiate(bullet, transform.position, transform.rotation);
+        //bulletClone.velocity = transform.forward * bulletSpeed;
         //code for public bulletSpeed, bullet, and bulletClone components found in Unity's community forum
         //https://answers.unity.com/questions/581576/simple-bullet-script.html
+        GameObject ball = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+        ball.transform.localScale = Vector3.one * 0.2f;
+        ball.transform.position = bulletSpawn.position;
+        ball.transform.Translate(transform.forward);    //move the ball forward by 1 meter
+
+        TrailRenderer tr = ball.AddComponent<TrailRenderer>();
+        tr.time = 0.5f;
+
+        Rigidbody rb = ball.AddComponent<Rigidbody>();
+        rb.AddForce(transform.forward * 50, ForceMode.Impulse);
     }
 
     public void Drop() {

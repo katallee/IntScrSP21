@@ -13,7 +13,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     Transform hand; //this is a hand positioned Empty child of Camera
     
-    Gun heldItem;
+    IItem heldItem;
     
     // Update is called once per frame
     void Update()
@@ -36,17 +36,29 @@ public class PlayerController : MonoBehaviour
         }
 
         crouching();
+
+
     }
 
 
     void OnTriggerEnter(Collider other)
     {
         //Debug.Log("I have hit " + other.gameObject.name + "!");
+         Debug.Log("I have hit " + other.gameObject.name);
+        if(other.gameObject.CompareTag("Coin")) {
+            //Destroy the coin
+            Destroy(other.gameObject);
+            coins += 1;
+            Debug.Log("I have " + coins + " coins.");
+        }
 
         if(other.gameObject.CompareTag("Item")) {
             Debug.Log("I'm trying to pickup an item.");
             //other.GetComponent<Gun>().Pickup(hand);
-            heldItem = other.GetComponent<Gun>();
+            if(heldItem != null) {
+                return;
+            }
+            heldItem = other.GetComponent<IItem>();
             heldItem.Pickup(hand);
         }
 

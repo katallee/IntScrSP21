@@ -1,11 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-<<<<<<< HEAD
-//asdf
-=======
 // asdf
->>>>>>> 368615fde4b69a4964442af0b47d76d78114ec6a
 public class InputManager : MonoBehaviour
 {
     
