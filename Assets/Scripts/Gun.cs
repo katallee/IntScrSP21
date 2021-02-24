@@ -41,9 +41,6 @@ public class Gun : MonoBehaviour, IItem
             ball.transform.position = bulletSpawn.position;
             ball.transform.Translate(transform.forward);    //move the ball forward by 1 meter
 
-            TrailRenderer tr = ball.AddComponent<TrailRenderer>();
-            tr.time = 0.5f;
-
             Rigidbody rb = ball.AddComponent<Rigidbody>();
             rb.AddForce(transform.forward * 50, ForceMode.Impulse);
 
@@ -62,7 +59,7 @@ public class Gun : MonoBehaviour, IItem
         this.GetComponent<Collider>().enabled = true;   //turn on gun's collider
     }
     IEnumerator Wait() {
-        yield return new WaitForSeconds(1);     //wait for 1 second
+        yield return new WaitForSeconds(.1f);     //wait for 1 second
         canFire = true;                         //make canfire true again
     }
 }
