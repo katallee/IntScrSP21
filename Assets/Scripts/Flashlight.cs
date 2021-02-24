@@ -20,9 +20,7 @@ public class Flashlight : MonoBehaviour, IItem
 
     public void Use() {
         Debug.Log("Using out Light");
-        
         flashlight.enabled = !flashlight.enabled;
-
     }
 
     public void Drop() {
