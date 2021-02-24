@@ -4,11 +4,15 @@
 TagManager:
   serializedVersion: 2
   tags:
+<<<<<<< HEAD
   - Floor
   - Pickup
   - Coin
   - Item
   - Bullet
+=======
+  - Coin
+>>>>>>> 368615fde4b69a4964442af0b47d76d78114ec6a
   layers:
   - Default
   - TransparentFX
