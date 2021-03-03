@@ -3,15 +3,17 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Portal : MonoBehaviour, IItem
-{
-    //public float bulletSpeed = 10f;     
+{    
     public Rigidbody bullet;
 
     [SerializeField]
     Transform bulletSpawn;
 
+    [SerializeField]
+    GameObject player;
+    
     bool canFire = true;
-
+    bool hasBeenFired = false;
     IItem heldItem;
 
     void Start() {
@@ -32,44 +34,44 @@ public class Portal : MonoBehaviour, IItem
     }
 
     public void Use() {
-        if(Input.GetButton("Fire1")) {
-            Debug.Log("I've pressed Left Mouse Button");
-            if(heldItem != null) { 
-                Debug.Log("The portal has been created");
-                if(canFire) {                                           //if canfire is true
-                    GameObject ball = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-                    ball.transform.localScale = Vector3.one * 0.2f;
-                    ball.transform.position = bulletSpawn.position;
-                    ball.transform.Translate(transform.forward);    //move the ball forward by 1 meter
-
-                    Rigidbody rb = ball.AddComponent<Rigidbody>();
-                    rb.AddForce(transform.forward * 50, ForceMode.Impulse);
-
-                    canFire = false;                                    //disable canfire
-                    StartCoroutine(Wait());                             //wait for 1 second
-                }
-            } else {
-                Debug.Log("We aren't holding anything.");
+        if(hasBeenFired) {
+            Teleport();
+            Debug.Log("Using the portal");    
+        } 
+        else {
+            GameObject ball = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+            ball.transform.localScale = Vector3.one * 0.2f;
+            ball.transform.position = bulletSpawn.position;
+            ball.transform.Translate(transform.forward);    //move the ball forward by 1 meter
+            Rigidbody rb = ball.AddComponent<Rigidbody>();
+            rb.AddForce(transform.forward * 50, ForceMode.Impulse);
             }
+        hasBeenFired = !hasBeenFired;       
         }
         
         
-    }
 
     public void Drop() {
-        Debug.Log("Dropping our item.");
-        this.gameObject.transform.SetParent(null);  //make gun stop following hand
-        this.GetComponent<Rigidbody>().isKinematic = false; //make gun fall
-        this.transform.Translate(0, 0, 2);  //move the gun forward 2 meters
-        this.GetComponent<Rigidbody>().AddForce(Vector3.forward * 10, ForceMode.Impulse);   //throw gun away with force
-        this.GetComponent<Collider>().enabled = true;   //turn on gun's collider
+         Debug.Log("Dropping our item.");
+         this.gameObject.transform.SetParent(null);  //make gun stop following hand
+         this.GetComponent<Rigidbody>().isKinematic = false; //make gun fall
+         this.transform.Translate(0, 0, 2);  //move the gun forward 2 meters
+         this.GetComponent<Rigidbody>().AddForce(Vector3.forward * 10, ForceMode.Impulse);   //throw gun away with force
+         this.GetComponent<Collider>().enabled = true;   //turn on gun's collider
     }
+
+    public void Teleport() {
+        Debug.Log("Being called");
+
+        player.transform.position = bullet.transform.position;
+        player.transform.Translate(Vector3.up);
+    }
+
     IEnumerator Wait() {
         yield return new WaitForSeconds(.1f);     //wait for 1 second
         canFire = true;                         //make canfire true again
     }
 }
-
 
      
      
