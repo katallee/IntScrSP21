@@ -8,13 +8,18 @@ public class FallingPlatform : MonoBehaviour
 
     //serialize variables
     [SerializeField]
-    float hangTime = 2f, resetTime = 4f;
+    float hangTime = 2f, resetTime = 4f, returnInterval = 1f;
+
+    [SerializeField]
+    AnimationCurve curve;
 
     //private variables
     Rigidbody rb;
     Renderer rend;                  
     Vector3 startPosition;              //stores x, y, z position
+    Quaternion startRotation;           //stores w,x,y,z, rotation
     Color startColor;                   //stores rgba color
+    bool platformIsActive = false;
 
     // Start is called before the first frame update
     void Start()
@@ -24,12 +29,13 @@ public class FallingPlatform : MonoBehaviour
         startPosition = this.transform.position;    //set the initial position of the platform
         rend = this.GetComponent<Renderer>();
         startColor = rend.material.color;
+        startRotation = this.transform.rotation;
     }
 
     //don't forget to add another box collider as a trigger
     //don't forget to tag the FPS Controller as "Player"
     void OnTriggerEnter(Collider other) {
-        if(other.gameObject.CompareTag("Player")) {
+        if(other.gameObject.CompareTag("Player") && !platformIsActive) {
             StartCoroutine(Fall());
            
         }
@@ -37,7 +43,7 @@ public class FallingPlatform : MonoBehaviour
 
     IEnumerator Fall() {
         Debug.Log("Starting fall process");
-
+        platformIsActive = true;
         rend.material.color = Color.red;
         yield return new WaitForSeconds(hangTime);
         rb.isKinematic = false;
@@ -46,24 +52,26 @@ public class FallingPlatform : MonoBehaviour
         Debug.Log("Resetting platform.");
         //reset the platform
         //this.transform.position = startPosition;
-        StartCoroutine(ReturnToStart());
-
         rb.isKinematic = true;
-        rend.material.color = startColor;
+        StartCoroutine(ReturnToStart());
     }
 
     IEnumerator ReturnToStart() {
         Vector3 endPosition = this.transform.position;   //this is the starting point of our Lerp
+        Quaternion endRotation = this.transform.rotation;
         float elapsedTime = 0f;                         //how much time has passed since we started
     
-        while(elapsedTime < 1) {
-            this.transform.position = Vector3.Lerp(endPosition, startPosition, elapsedTime / 1);
+        while(elapsedTime < returnInterval) {
+            this.transform.position = Vector3.Lerp(endPosition, startPosition, curve.Evaluate(elapsedTime / returnInterval));
+            this.transform.rotation = Quaternion.Lerp(endRotation, startRotation, curve.Evaluate(elapsedTime / returnInterval));
             elapsedTime += Time.deltaTime;
 
             yield return null;
         }
 
         this.transform.position = startPosition;
+        this.transform.rotation = startRotation;
         rend.material.color = startColor;
+        platformIsActive = false;
     }
 }
