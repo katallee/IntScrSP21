@@ -13,7 +13,9 @@ public class FallingPlatform : MonoBehaviour
     [SerializeField]
     AnimationCurve curve;
 
-    //private variables
+    [SerializeField]
+    Color activeColor = Color.red;
+    
     Rigidbody rb;
     Renderer rend;                  
     Vector3 startPosition;              //stores x, y, z position
@@ -44,7 +46,7 @@ public class FallingPlatform : MonoBehaviour
     IEnumerator Fall() {
         Debug.Log("Starting fall process");
         platformIsActive = true;
-        rend.material.color = Color.red;
+        StartCoroutine(LerpColor(startColor, activeColor, 0.2f));
         yield return new WaitForSeconds(hangTime);
         rb.isKinematic = false;
         
@@ -72,6 +74,18 @@ public class FallingPlatform : MonoBehaviour
         this.transform.position = startPosition;
         this.transform.rotation = startRotation;
         rend.material.color = startColor;
+        StartCoroutine(LerpColor(startColor, activeColor, 0.2f));
         platformIsActive = false;
+    }
+
+    IEnumerator LerpColor(Color startColor, Color endColor, float interval) {
+        float elapsedTime = 0f;
+        while(elapsedTime < interval) {
+            rend.material.color = Color.Lerp(startColor, endColor, curve.Evaluate(elapsedTime / interval));
+            elapsedTime += Time.deltaTime;
+
+            yield return null;
+        }
+        rend.material.color = endColor;
     }
 }
