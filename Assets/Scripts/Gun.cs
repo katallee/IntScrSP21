@@ -4,8 +4,6 @@ using UnityEngine;
 
 public class Gun : MonoBehaviour, IItem
 {
-    public float bulletSpeed = 10f;     
-    public Rigidbody bullet;
 
     [SerializeField]
     Transform bulletSpawn;
@@ -31,10 +29,6 @@ public class Gun : MonoBehaviour, IItem
 
     public void Use() {
         Debug.Log("<color=red>Pow!</color>");
-        //Rigidbody bulletClone = (Rigidbody) Instantiate(bullet, transform.position, transform.rotation);
-        //bulletClone.velocity = transform.forward * bulletSpeed;
-        //code for public bulletSpeed, bullet, and bulletClone components found in Unity's community forum
-        //https://answers.unity.com/questions/581576/simple-bullet-script.html
         if(canFire) {                                           //if canfire is true
             GameObject ball = GameObject.CreatePrimitive(PrimitiveType.Sphere);
             ball.transform.localScale = Vector3.one * 0.2f;
