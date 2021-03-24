@@ -5,6 +5,11 @@ TagManager:
   serializedVersion: 2
   tags:
   - Item
+  - Bullet
+  - Threat
+  - NextLevel
+  - LastLevel
+  - Coin
   layers:
   - Default
   - TransparentFX
