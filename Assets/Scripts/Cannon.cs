@@ -8,8 +8,8 @@ public class Cannon : MonoBehaviour, Threat
     [SerializeField]
     Transform bulletSpawn;
 
-    bool handInView = false;
-
+    bool cannonNear = true;
+    
     void Start()
     {
         if(bulletSpawn == null) {
@@ -17,13 +17,9 @@ public class Cannon : MonoBehaviour, Threat
         }
     }
 
-    public void Fire(Transform Hand)
-    {
-        Debug.Log("<color=red>Die!</color>");
-        //TO DO 
-        //if statement to test if hand of player controller is facing cannon.
-        //if hand facing cannon bool handInView = true
-        if(handInView) {                                           //if canfire is true
+    public void Fire()
+    {    
+        if(cannonNear) {                                           //if canfire is true
             GameObject ball = GameObject.CreatePrimitive(PrimitiveType.Sphere);
             ball.transform.localScale = Vector3.one * 0.8f;
             ball.transform.position = bulletSpawn.position;

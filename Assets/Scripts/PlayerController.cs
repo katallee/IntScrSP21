@@ -5,16 +5,32 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     public int oxygenSupply = 0;
-    bool crouch = false;
     public int coins = 0;
-
     
     //variables that should go at the top
     [SerializeField]
     Transform hand; //this is a hand positioned Empty child of Camera
+
+    [SerializeField]
+    AudioClip doorOpen;
+
+    AudioSource aud;
     
     IItem heldItem;
-    
+
+    Vector3 startPosition;
+
+    //Threat cannonNear;
+    int totalKeys = 0;
+    bool crouch = false;
+
+    void Start()
+    {
+        startPosition = this.transform.position;
+        this.GetComponent<Rigidbody>().interpolation = RigidbodyInterpolation.Interpolate;
+        aud = this.GetComponent<AudioSource>();
+    }
+
     // Update is called once per frame
     void Update()
     {
@@ -41,11 +57,28 @@ public class PlayerController : MonoBehaviour
 
     }
 
-
     void OnTriggerEnter(Collider other)
     {
-        //Debug.Log("I have hit " + other.gameObject.name + "!");
-         Debug.Log("I have hit " + other.gameObject.name);
+        Debug.Log("I have hit " + other.gameObject.name);
+
+
+        if(other.gameObject.CompareTag("Key")) {
+            totalKeys += 1;
+            Destroy(other.gameObject);
+            Debug.Log("You have " + totalKeys + " keys.");
+        }
+
+        if(other.gameObject.CompareTag("Door")) {
+            if(totalKeys > 0) {
+                totalKeys -= 1;
+                Destroy(other.gameObject);
+                aud.PlayOneShot(doorOpen);
+            }
+            else {
+                Debug.Log("You need a key to open this door.");
+            }
+        }
+        
         if(other.gameObject.CompareTag("Coin")) {
             //Destroy the coin
             Destroy(other.gameObject);
@@ -81,6 +114,10 @@ public class PlayerController : MonoBehaviour
         if (other.gameObject.CompareTag("Floor")) {
             other.gameObject.GetComponent<Renderer>().material.color = Random.ColorHSV();
         }
+
+        //if(other.gameObject.CompareTag("Threat")) {
+        //    cannonNear();
+        //}
     }
     
     void OnTriggerExit(Collider other)
