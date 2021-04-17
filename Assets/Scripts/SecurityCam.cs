@@ -34,7 +34,8 @@ public class SecurityCam : MonoBehaviour
                 ball.transform.Translate(transform.forward);    //move the ball forward by 1 meter
 
                 Rigidbody rb = ball.AddComponent<Rigidbody>();
-                rb.AddForce(transform.forward * 50, ForceMode.Impulse);
+                rb.AddForce(transform.forward * 10, ForceMode.Impulse);
+                
             }
             else {
                 rend.material.color = Color.green;
