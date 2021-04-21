@@ -9,9 +9,13 @@ public class CubePlayer : MonoBehaviour
     //reference to rigidbody
     Rigidbody rb;   
 
+    //add start position
+    Vector3 startPosition;
+
     // Start is called before the first frame update
     void Start()
     {
+        startPosition = this.transform.position;
         rb = GetComponent<Rigidbody>();
     }
 

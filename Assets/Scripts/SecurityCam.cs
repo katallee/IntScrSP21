@@ -12,6 +12,8 @@ public class SecurityCam : MonoBehaviour
 
     private RaycastHit hit;
     private Renderer rend;
+
+    bool canFire = false;
     
     void Start() {
         rend = GetComponent<Renderer>();
@@ -27,15 +29,19 @@ public class SecurityCam : MonoBehaviour
             if(hit.collider.CompareTag("Player")) {
                 rend.material.color = Color.red;
                 Debug.DrawRay(rayEmitter.position, transform.forward * 10, Color.red, 1);
+                //wait one second
+                StartCoroutine(Wait());                             //wait for 1 second
+                //canFire = true;
                 //shoot at player
-                GameObject ball = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-                ball.transform.localScale = Vector3.one * 0.5f;
-                ball.transform.position = bulletSpawn.position;
-                ball.transform.Translate(transform.forward);    //move the ball forward by 1 meter
+                if(canFire) { 
+                    GameObject ball = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+                    ball.transform.localScale = Vector3.one * 0.5f;
+                    ball.transform.position = bulletSpawn.position;
+                    ball.transform.Translate(transform.forward);    //move the ball forward by 1 meter
 
-                Rigidbody rb = ball.AddComponent<Rigidbody>();
-                rb.AddForce(transform.forward * 10, ForceMode.Impulse);
-                
+                    Rigidbody rb = ball.AddComponent<Rigidbody>();
+                    rb.AddForce(transform.forward * 10, ForceMode.Impulse);
+                }
             }
             else {
                 rend.material.color = Color.green;
@@ -46,5 +52,10 @@ public class SecurityCam : MonoBehaviour
         }
 
         //Debug.DrawRay(rayEmitter.position, transform.forward * 10, Color.white, 1);
+    }
+
+    IEnumerator Wait() {
+        yield return new WaitForSeconds(.1f);     //wait for 1 second
+        canFire = true;                         //make canfire true again
     }
 }
