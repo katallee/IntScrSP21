@@ -13,10 +13,10 @@ TagManager:
   - Floor
   - Key
   - Door
-  - AirSword
-  - WaterSword
-  - EarthSword
-  - FireSword
+  - Water
+  - Fire
+  - Earth
+  - Air
   layers:
   - Default
   - TransparentFX

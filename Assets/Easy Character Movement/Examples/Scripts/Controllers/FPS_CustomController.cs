@@ -35,7 +35,7 @@ namespace ECM.Examples
         /// <summary>
         /// Animate camera pivot to play Headbob like animations, Feed CharacterMovement info to camera animator.
         /// </summary>
-
+       
         private void AnimateCamera()
         {
             //var normalizedSpeed = Mathf.InverseLerp(0.0f, forwardSpeed, movement.velocity.onlyXZ().magnitude);
