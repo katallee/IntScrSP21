@@ -17,6 +17,7 @@ TagManager:
   - Fire
   - Earth
   - Air
+  - Wands
   layers:
   - Default
   - TransparentFX
